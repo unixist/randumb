@@ -69,14 +69,15 @@ class Entropy(object):
     freqs = self.frequency_list()
     return float(sum(freqs)) / float(len(freqs))
 
-def main(filename):
-  elf = ELFFile(open(filename, 'rb'))
-  section = elf.get_section_by_name('.text')
-  content = section.stream.read()
+def main(args):
+  if len(args) > 1:
+    content = open(args[1], 'rb').read()
+  else:
+    content = sys.stdin.read()
 
   e = Entropy(content)
 
   print("Frequency(avg): %f" % e.frequency_avg())
 
 if __name__ == '__main__':
-	sys.exit(main(sys.argv[1]))
+	sys.exit(main(sys.argv))
