@@ -77,19 +77,6 @@ def main(filename):
   e = Entropy(content)
 
   print("Frequency(avg): %f" % e.frequency_avg())
-  print("Frequency(gap): %f" % e.frequency_gap())
-
-#def parse_args():
-#  import argparse
-#  parser = argparse.ArgumentParser()
-#  parser.add_argument('filename', metavar='N', type=int, nargs='+',
-#                     help='an integer for the accumulator')
-#  parser.add_argument('--sum', dest='filename', action='store_true',
-#                     const=sum, default=max,
-#                     help='sum the integers (default: find the max)')
-#
-#  args = parser.parse_args()
-#  print(args.accumulate(args.integers))
 
 if __name__ == '__main__':
 	sys.exit(main(sys.argv[1]))
