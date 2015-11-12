@@ -1,6 +1,6 @@
 # Summary
 
-seebinrand quickly guesses at a binary's randomness by analyzing its .text segment. 
+randumb quickly guesses at a binary's randomness by analyzing its .text segment. 
 
 The type of analysis currently supported is the first of Kendall and Smith's randomness tests: the frequency test. It tries to answer the question of how uniform is the distribution of characters in a given body of bytes.
 
@@ -12,19 +12,19 @@ The type of analysis currently supported is the first of Kendall and Smith's ran
 ```bash
 
 # input - linux kernel .text
-vagrant@precise64:~/seebinrand$ objcopy -O binary --only-section=.text ~/vmlinux /dev/stdout | python randumb.py
+vagrant@precise64:~/randumb$ objcopy -O binary --only-section=.text ~/vmlinux /dev/stdout | python randumb.py
 Frequency(avg): 0.326217
-vagrant@precise64:~/seebinrand$
+vagrant@precise64:~/randumb$
 
 # input - /dev/random
-vagrant@precise64:~/seebinrand$ python randumb.py < ~/input.random
+vagrant@precise64:~/randumb$ python randumb.py < ~/input.random
 Frequency(avg): 0.632422
-vagrant@precise64:~/seebinrand$
+vagrant@precise64:~/randumb$
 
 # input - openssl enc -aes-256-cbc
-vagrant@precise64:~/seebinrand$ python randumb.py < ~/input.enc
+vagrant@precise64:~/randumb$ python randumb.py < ~/input.enc
 Frequency(avg): 0.613281
-vagrant@precise64:~/seebinrand$
+vagrant@precise64:~/randumb$
 ```
 
 The closer to "1", the more of a chance portions of the program are encrypted. I've found that random/well-encrypted content will yield about .6-.7 in my testing.
