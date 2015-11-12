@@ -12,17 +12,17 @@ The type of analysis currently supported is the first of Kendall and Smith's ran
 ```bash
 
 # input - linux kernel .text
-vagrant@precise64:~/seebinrand$ objcopy -O binary --only-section=.text ~/vmlinux /dev/stdout | python seebinrand.py
+vagrant@precise64:~/seebinrand$ objcopy -O binary --only-section=.text ~/vmlinux /dev/stdout | python randumb.py
 Frequency(avg): 0.326217
 vagrant@precise64:~/seebinrand$
 
 # input - /dev/random
-vagrant@precise64:~/seebinrand$ python seebinrand.py < ~/input.random
+vagrant@precise64:~/seebinrand$ python randumb.py < ~/input.random
 Frequency(avg): 0.632422
 vagrant@precise64:~/seebinrand$
 
 # input - openssl enc -aes-256-cbc
-vagrant@precise64:~/seebinrand$ python seebinrand.py < ~/input.enc
+vagrant@precise64:~/seebinrand$ python randumb.py < ~/input.enc
 Frequency(avg): 0.613281
 vagrant@precise64:~/seebinrand$
 ```
