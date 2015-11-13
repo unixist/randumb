@@ -1,11 +1,12 @@
 # Summary
 
-randumb quickly guesses at a binary's randomness by analyzing its .text segment. 
+randumb naively estimates an input's level of entropy by running some tests on it. Possible values range from 0 to 1 where 1 is as random as randumb can guess.
 
-The type of analysis currently supported is the first of Kendall and Smith's randomness tests: the frequency test. It tries to answer the question of how uniform is the distribution of characters in a given body of bytes.
+The type of analysis currently supported is the first of [Kendall and Smith's randomness tests](https://en.wikipedia.org/wiki/Statistical_randomness): the frequency test. It tries to answer the question of how uniform is the distribution of characters in a given body of bytes.
 
 # Description
-* Frequency test - iterate over the input in chunks and find the ratio of "unique-number-of-bytes / length-of-chunk". A chunk of length `n`-bytes would be uniformly distributed (and equal 1 in the frequency test) if each value were a different byte value.
+Tests:
+* Frequency - iterate over the input in chunks and find the ratio of "unique-number-of-bytes / length-of-chunk". A chunk of length `n`-bytes would be uniformly distributed (and equal 1 in the frequency test) if each value were a different byte value.
   * Example: if a 26-byte chunk contained the value "abcdefghijklmnopqrstuvwxyz", then it'd be random as far as the frequency test is concerned since each value is present only once. Of course there is a pattern there, but that's for another test to decide.
 
 # Example
