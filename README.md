@@ -12,6 +12,11 @@ Tests:
 # Example
 ```bash
 
+# input - ASCII file
+vagrant@precise64:~/randumb$ python randumb.py < /etc/passwd
+Frequency(avg): 0.165232
+vagrant@precise64:~/randumb$
+
 # input - linux kernel .text
 vagrant@precise64:~/randumb$ objcopy -O binary --only-section=.text ~/vmlinux /dev/stdout | python randumb.py
 Frequency(avg): 0.326217
