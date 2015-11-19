@@ -2,9 +2,6 @@ import os
 import sys
 import math
 
-from elftools.elf.elffile import ELFFile
-from elftools.elf.sections import SymbolTableSection
-
 class Entropy(object):
   '''
   Naively estimate content's entropic probability
