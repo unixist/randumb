@@ -2,7 +2,9 @@
 
 randumb naively estimates an input's level of entropy by running some tests on it. Possible values range from 0 to 1 where 1 is as random as randumb can guess.
 
-The type of analysis currently supported is the first of [Kendall and Smith's randomness tests](https://en.wikipedia.org/wiki/Statistical_randomness): the frequency test. It tries to answer the question of how uniform is the distribution of characters in a given body of bytes.
+The types of analysis currently supported are frequency and skewness. The first of [Kendall and Smith's randomness tests](https://en.wikipedia.org/wiki/Statistical_randomness) is the frequency test. It tries to answer the question of how uniform is the distribution of characters in a given body of bytes.
+
+The skewness analysis is based upon [Pearson's second coefficient](http://mathworld.wolfram.com/PearsonsSkewnessCoefficients.html). It tries to make a binary guess of randomness based upon a distribution's variance.
 
 # Description
 Tests:
@@ -27,10 +29,12 @@ vagrant@precise64:~/randumb$
 # Cryptostalker example
 This tool uses the randumb library to monitor a filesystem path and detect newly-written files. If these new files are deemed random and occur at a fast enough rate (configurable), then it notifes you.
 
-I implemented this initially using linux's inotify facility. This allows a file write event to be filtered on IN_CLOSE_WRITE, which occurs when the file is finished writing. I'd prefer to use auditd to alert on new file writes since it can also give the process ID of the writer. Although auditd can place a recursive watch similar to inotify, I don't know if auditd can alert on a file only *after* all writes are complete and only if it was opened for writing.
+I implemented this initially using linux's inotify facility. This allows a file write event to be filtered on IN_CLOSE_WRITE, which occurs when the file is finished writing. I'd prefer to use auditd to alert on new file writes since it can also give the process ID of the writer. That'd allow the process to be killed if we have enough confidence that it's probably bad. (Although auditd can place a recursive watch similar to inotify, I don't know if auditd can alert on a file only *after* all writes are complete and only if it was opened for writing.)
 
-I'd be stoked if someone can show me how to get auditd to behave optimally for this use case!
-
+Notes:
+* I'd be stoked if someone can show me how to get auditd to behave optimally for this use case!
+* cryptostalker may incorrectly identify compressed files as encrypted files. I haven't found this to be true in my testing, but I can only imagine that given a quality compressor and the right type of data input this will yield some false positives. You can always tweak the `RAND_THRESHOLD`s in randumb.py to your liking.
+ 
 ```bash
 # Run with only --path parameter defaults to a detection rate of 10/60seconds
 vagrant@precise64:~/randumb$ python cryptostalker.py --path /home
