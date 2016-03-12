@@ -19,8 +19,9 @@ I use a naïve combination of the randomness tests described above to arrive at 
 # input - regular OpenSSH binary
 vagrant@precise64:~/randumb$ python randumb.py < /usr/bin/ssh; echo $?
 1
-vagrant@precise64:~/randumb$# input - encrypted OpenSSH binary 
+vagrant@precise64:~/randumb$
 
+# input - encrypted OpenSSH binary 
 vagrant@precise64:~/randumb$ python randumb.py < /tmp/ssh.enc; echo $?
 0
 vagrant@precise64:~/randumb$
