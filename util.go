@@ -14,9 +14,8 @@ func avg(nums []float64) float64 {
 }
 
 func stdDev(nums []float64) float64 {
-  anums := avg(nums)
   return math.Sqrt(avg(mapFloat64(nums, func(f float64) float64 {
-    return math.Pow(f - anums, 2)
+    return math.Pow(f - avg(nums), 2)
   })))
 }
 
@@ -42,7 +41,6 @@ func mapFloat64(vs []float64, f func(float64) float64) []float64 {
 func makeBinMap(data []byte, tuple int) map[string]int {
   binMap := map[string]int{}
   binStr := ""
-
   for _, d := range data {
     for _, bit := range strconv.FormatInt(int64(d), 2) {
       if len(binStr) == tuple {
@@ -53,6 +51,5 @@ func makeBinMap(data []byte, tuple int) map[string]int {
       }
     }
   }
-
   return binMap
 }

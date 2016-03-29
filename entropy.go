@@ -4,6 +4,10 @@ import (
   "sort"
 )
 
+/*
+ * Pearson's second skewness coefficient:
+ *   3 * (avg - median) / std_dev
+ */
 func Skewness(data []byte, tuple int) float64 {
   binMap := makeBinMap(data, tuple) 
   values := []float64{}
