@@ -1,6 +1,7 @@
 package randumb
 
 import (
+  "fmt"
   "math"
   "strconv"
 )
@@ -37,8 +38,39 @@ func mapFloat64(vs []float64, f func(float64) float64) []float64 {
   return vsm
 } 
 
-// Map the 2^tuple number of keys to the frequency that bit sequence occurs.
-func makeBinMap(data []byte, tuple int) map[string]int {
+func frequency(chunk []byte) float64 {
+  hist := makeByteHist(chunk)
+  lhist := float64(len(hist))
+  lchunk := float64(len(chunk))
+  if lchunk == 0.0 || lhist == 0.0 {
+    return 0.0
+  }
+  return lhist / lchunk
+}
+func frequencyList(data []byte, chunkSize int) []float64 {
+  chunks := makeChunks(data, chunkSize)
+  fl := []float64{}
+  for _, c := range chunks {
+    fl = append(fl, frequency(c))
+  }
+  return fl
+}
+
+// Chunk the data into a slice of size-sized byte slices.
+func makeChunks(data []byte, size int) [][]byte {
+  j := 0
+  l := len(data)
+  chunks := make([][]byte, l / size + 1)
+  for i := 0; i < l; i += size {
+    chunks[j] = append(chunks[j], data[i:int(math.Min(float64(i+size), float64(l)))]...)
+    j += 1
+  }
+  return chunks
+}
+
+// Histogram of tuple-wide bit frequency in data
+// Example: { '0010': 4, '0110', 41 }
+func makeBinHist(data []byte, tuple int) map[string]int {
   binMap := map[string]int{}
   binStr := ""
   for _, d := range data {
@@ -52,4 +84,21 @@ func makeBinMap(data []byte, tuple int) map[string]int {
     }
   }
   return binMap
+}
+
+// Histogram of byte frequency in data
+func makeByteHist(data []byte) map[string]int {
+  byteMap := map[string]int{}
+  for _, d := range data {
+    byteMap[fmt.Sprintf("%d", d)] += 1
+  }
+  return byteMap
+}
+
+func sum(nums []float64) float64 {
+  total := 0.0
+  for _, i := range nums {
+    total += i
+  }
+  return total
 }
