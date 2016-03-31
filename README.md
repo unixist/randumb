@@ -30,12 +30,20 @@ vagrant@precise64:~/randumb$
 # Cryptostalker example
 This tool uses the randumb library to monitor a filesystem path and detect newly-written files. If these new files are deemed random and occur at a fast enough rate (configurable), then it notifes you.
 
+## MOVED: cryptostalker.py has [moved to its own repository](https://github.com/unixist/cryptostalker) and been ported to the Go language. So it at least works on Linux and OSX. Haven't yet tested Windows.
+
+#### Python version
 I implemented this initially using linux's inotify facility. This allows a file write event to be filtered on IN_CLOSE_WRITE, which occurs when the file is finished writing. I'd prefer to use auditd to alert on new file writes since it can also give the process ID of the writer. That'd allow the process to be killed if we have enough confidence that it's probably bad. (Although auditd can place a recursive watch similar to inotify, I don't know if auditd can alert on a file only *after* all writes are complete and only if it was opened for writing.)
 
-Notes:
+#### Go version
+The file notification mechanism is Google's [fsnotify](https://github.com/fsnotify/fsnotify). Since it doesn't use the linux-specific [inotify](https://en.wikipedia.org/wiki/Inotify), cryptostalker currently relies on notifications of new files. So random/encrypted files will only be detected if they belong to new inodes; which means it wont catch the following case: a file is opened, truncated, and only then filled in with encrypted content. Fortunately, this is not how most malware works.
+
+See the [new repo for the go version](https://github.com/unixist/cryptostalker).
+
+#### Misc
 * I'd be stoked if someone can show me how to get auditd to behave optimally for this use case!
 * cryptostalker may incorrectly identify compressed files as encrypted files. I haven't found this to be true in my testing, but I can only imagine that given a quality compressor and the right type of data input this will yield some false positives. You can always tweak the `RAND_THRESHOLD`s in randumb.py to your liking.
- 
+
 ```bash
 # Run with only --path parameter defaults to a detection rate of 10/60seconds
 vagrant@precise64:~/randumb$ python cryptostalker.py --path /home
