@@ -16,27 +16,27 @@ func avg(nums []float64) float64 {
 
 func stdDev(nums []float64) float64 {
   return math.Sqrt(avg(mapFloat64(nums, func(f float64) float64 {
-    return math.Pow(f - avg(nums), 2)
+    return math.Pow(f-avg(nums), 2)
   })))
 }
 
 func median(nums []float64) float64 {
-    var sub = 0
-    c := len(nums)
-    if c % 2 == 0 {
-      sub = 1
-    }
-    return nums[c/2-sub]
+  var sub = 0
+  c := len(nums)
+  if c%2 == 0 {
+    sub = 1
+  }
+  return nums[c/2-sub]
 }
 
 // Graciously plucked from gobyexample.com
 func mapFloat64(vs []float64, f func(float64) float64) []float64 {
   vsm := make([]float64, len(vs))
   for i, v := range vs {
-      vsm[i] = f(v)
+    vsm[i] = f(v)
   }
   return vsm
-} 
+}
 
 func frequency(chunk []byte) float64 {
   hist := makeByteHist(chunk)
@@ -60,7 +60,7 @@ func frequencyList(data []byte, chunkSize int) []float64 {
 func makeChunks(data []byte, size int) [][]byte {
   j := 0
   l := len(data)
-  chunks := make([][]byte, l / size + 1)
+  chunks := make([][]byte, l/size+1)
   for i := 0; i < l; i += size {
     chunks[j] = append(chunks[j], data[i:int(math.Min(float64(i+size), float64(l)))]...)
     j += 1
@@ -71,15 +71,25 @@ func makeChunks(data []byte, size int) [][]byte {
 // Histogram of tuple-wide bit frequency in data
 // Example: { '0010': 4, '0110', 41 }
 func makeBinHist(data []byte, tuple int) map[string]int {
+  chrMap := map[byte]string{}
   binMap := map[string]int{}
   binStr := ""
   for _, d := range data {
-    for _, bit := range strconv.FormatInt(int64(d), 2) {
+    // Convert byte -> binary string representation and cache it for
+    // better performance.
+    if _, in := chrMap[d]; !in {
+      chrMap[d] = strconv.FormatInt(int64(d), 2)
+    }
+    // Iterate over the binary representation and construct the
+    // histogram of binary sequences.
+    for _, bit := range chrMap[d] {
       if len(binStr) == tuple {
         binMap[binStr] += 1
         binStr = ""
+      } else if bit == '1' {
+        binStr += "1"
       } else {
-        binStr += string(bit)
+        binStr += "0"
       }
     }
   }
