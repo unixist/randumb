@@ -30,7 +30,7 @@ vagrant@precise64:~/randumb$
 # Cryptostalker example
 This tool uses the randumb library to monitor a filesystem path and detect newly-written files. If these new files are deemed random and occur at a fast enough rate (configurable), then it notifes you.
 
-## MOVED: cryptostalker.py has [moved to its own repository](https://github.com/unixist/cryptostalker) and been ported to the Go language. So it at least works on Linux and OSX. Haven't yet tested Windows.
+## MOVED: cryptostalker.py has [moved to its own repository](https://github.com/unixist/cryptostalker) and been ported to the Go language. So it works on Linux, OSX and Windows.
 
 #### Python version
 I implemented this initially using linux's inotify facility. This allows a file write event to be filtered on IN_CLOSE_WRITE, which occurs when the file is finished writing. I'd prefer to use auditd to alert on new file writes since it can also give the process ID of the writer. That'd allow the process to be killed if we have enough confidence that it's probably bad. (Although auditd can place a recursive watch similar to inotify, I don't know if auditd can alert on a file only *after* all writes are complete and only if it was opened for writing.)
