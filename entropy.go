@@ -2,6 +2,7 @@ package randumb
 
 import (
 	"sort"
+	"sync"
 )
 
 // Arbitrary thresholds outside of which randomness is "likely"
@@ -20,9 +21,34 @@ func Skewness(data []byte, tuple int) float64 {
 	for _, i := range binHist {
 		values = append(values, float64(i))
 	}
-
 	sort.Float64s(values)
-	return 3 * (avg(values) - median(values)) / stdDev(values)
+
+	var a, m, s float64
+	wg := sync.WaitGroup{}
+
+	// Calculate the average.
+	wg.Add(1)
+	go func() {
+		a = avg(values)
+		wg.Done()
+	}()
+
+	// Calculate the median.
+	wg.Add(1)
+	go func() {
+		m = median(values)
+		wg.Done()
+	}()
+
+	// Calculate the standard deviation.
+	wg.Add(1)
+	go func() {
+		s = stdDev(values)
+		wg.Done()
+	}()
+
+	wg.Wait()
+	return 3 * (a - m) / s
 }
 
 func Frequency(data []byte, chunkSize int) float64 {
@@ -34,9 +60,21 @@ func IsRandom(data []byte) bool {
 	// These vars may be changed to adjust randomness measurement
 	var tuple = 8
 	var chunkSize = 256
-	if Frequency(data, chunkSize) >= FreqThresh &&
-		Skewness(data, tuple) <= SkewThresh {
-		return true
-	}
-	return false
+
+	wg := sync.WaitGroup{}
+	wg.Add(1)
+	var f, s float64
+	go func(){
+		f = Frequency(data, chunkSize)
+		wg.Done()
+	}()
+
+	wg.Add(1)
+	go func(){
+		s = Skewness(data, tuple)
+		wg.Done()
+	}()
+	wg.Wait()
+
+	return f >= FreqThresh && s <= SkewThresh 
 }
