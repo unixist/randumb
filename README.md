@@ -10,11 +10,12 @@ The skewness analysis is based upon [Pearson's second coefficient](http://mathwo
 Tests:
 * Frequency - iterate over the input in chunks and find the ratio of "unique-number-of-bytes / length-of-chunk". A chunk of length `n`-bytes would be uniformly distributed (and equal 1 in the frequency test) if each value were a different byte value.
   * Example: if a 26-byte chunk contained the value "abcdefghijklmnopqrstuvwxyz", then it'd be random as far as the frequency test is concerned since each value is present only once. Of course there is a pattern there, but that's for another test to decide.
-* Skewness - iterate over the input and make a histogram out of the input. Each bucket contains a bit tuple (8-bit tuple by default). The amount of variance across the distribution determines the inputs randomness. I currently use an anecdotal constant that is used as a threshold for determining randomness. The basis for this equation is [Pearson's second coefficient](http://mathworld.wolfram.com/PearsonsSkewnessCoefficients.html).
+* Skewness - iterate over the input and make a histogram out of the input. Each bucket contains a bit tuple (8-bit tuple by default). The amount of variance across the distribution determines the input's randomness. I currently use an anecdotal constant as a threshold for determining randomness. The basis for this equation is [Pearson's second coefficient](http://mathworld.wolfram.com/PearsonsSkewnessCoefficients.html).
 
 # Simple example
 I use a naïve combination of the randomness tests described above to arrive at a guess of randomness. Given an input, randumb.py returns a binary value: 0 for random, 1 for non-random.
 
+Let's look at an ELF binary in encrypted and unencrypted form.
 ```bash
 # input - regular OpenSSH binary
 vagrant@precise64:~/randumb$ python randumb.py < /usr/bin/ssh; echo $?
