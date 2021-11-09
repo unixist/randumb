@@ -57,6 +57,11 @@ func Frequency(data []byte, chunkSize int) float64 {
 }
 
 func IsRandom(data []byte) bool {
+	// Check for empty data
+	if len(data) == 0 {
+		return false
+	}
+	
 	// These vars may be changed to adjust randomness measurement
 	var tuple = 8
 	var chunkSize = 256
